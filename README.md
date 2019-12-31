@@ -10,6 +10,14 @@ Support **androidx**
 
 添加依赖
 ```groovy
+//根目录build.gradle
+allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+}
+//要使用的模块添加:
 dependencies {
     implementation 'com.github.hcanyz.ZAdapter:ZAdapter:1.0.0'
 }
