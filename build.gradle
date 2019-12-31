@@ -1,0 +1,21 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    apply from: "./dependencies.gradle"
+
+    repositories deps.gradleConfig.repositories
+
+    dependencies {
+        classpath deps.build.androidPlugin
+        classpath deps.kotlin.gradlePlugin
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
+    }
+}
+
+allprojects {
+    repositories deps.gradleConfig.repositories
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

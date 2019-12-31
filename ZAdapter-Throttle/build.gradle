@@ -1,0 +1,25 @@
+apply plugin: 'com.android.library'
+
+apply plugin: 'com.github.dcendents.android-maven'
+group = 'com.github.hcanyz'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
+android deps.gradleConfig.simpleAndroid(project)
+
+android {
+    packageBuildConfig(false)
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation project(':ZAdapter')
+
+    compileOnly deps.android.recyclerview
+
+    api deps.third.rxjava2
+    api deps.third.rxandroid
+}
