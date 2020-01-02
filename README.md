@@ -1,4 +1,4 @@
-ZAdapter
+[ZAdapter](#https://github.com/hcanyz/ZAdapter)
 ===
 
 > 简化RecyclerView Adapter的繁琐写法
@@ -12,10 +12,10 @@ Support **androidx**
 ```groovy
 //根目录build.gradle
 allprojects {
-		repositories {
-			...
-			maven { url 'https://jitpack.io' }
-		}
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }
+    }
 }
 //要使用的模块添加:
 dependencies {
