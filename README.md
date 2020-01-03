@@ -1,10 +1,33 @@
-[ZAdapter](#https://github.com/hcanyz/ZAdapter)
+ZAdapter
 ===
 
 > 简化RecyclerView Adapter的繁琐写法
+> https://github.com/hcanyz/ZAdapter
 
 Support **API v14+**  
 Support **androidx** 
+
+## ZAdapter初衷
+
+### recylcerview + adapter有什么问题
+
+    当我们使用RecyclerView的时候，先要创建一个Adapter，  
+
+    在```getItemViewType```中根据数据对象定义很多viewType常量   
+    在```onCreateViewHolder```中又根据viewType创建对应的holder   
+    每个业务场景的adpter需要用的viewType又不一样，导致了很多重复定义，又有很多不同业务的holder融合在一个adpter。
+
+    holder与容器的事件需要通过adapter层层传递。
+
+    holder没有统一的范式方法，例如holder生命周期
+
+    holder不能很好的被除recylcerview之外的容器使用
+
+### ZAdapter思路
+
+1. 通过```HolderTypeResolverRegistry关联``` bean与creator
+2. 通过```ViewHolderHelper```传递容器，在使用ViewModel传递事件
+3. 通过lifecycle 定义holder生命周期
 
 ## 如何使用
 
@@ -99,25 +122,3 @@ recylerview.adapter = zAdapter
     //界面结束 onDestroy
     (recylerview.adapter as ZAdapterThrottle<*>).release()
     ```
-
-## ZAdapter初衷
-
-### recylcerview + adapter有什么问题
-
-    当我们使用RecyclerView的时候，先要创建一个Adapter，  
-
-    在```getItemViewType```中根据数据对象定义很多viewType常量   
-    在```onCreateViewHolder```中又根据viewType创建对应的holder   
-    每个业务场景的adpter需要用的viewType又不一样，导致了很多重复定义，又有很多不同业务的holder融合在一个adpter。
-
-    holder与容器的事件需要通过adapter层层传递。
-
-    holder没有统一的范式方法，例如holder生命周期
-
-    holder不能很好的被除recylcerview之前的容器使用
-
-### ZAdapter思路
-
-1. 通过```HolderTypeResolverRegistry关联``` bean与creator
-2. 通过```ViewHolderHelper```传递容器，在使用ViewModel传递事件
-3. 通过lifecycle 定义holder生命周期
