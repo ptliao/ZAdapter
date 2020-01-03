@@ -1,7 +1,7 @@
 ZAdapter
 ===
 
-> 简化RecyclerView Adapter的繁琐写法
+> 简化RecyclerView Adapter的繁琐写法  
 > https://github.com/hcanyz/ZAdapter
 
 Support **API v14+**  
