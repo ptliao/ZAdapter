@@ -4,6 +4,8 @@ ZAdapter
 > 简化RecyclerView Adapter的繁琐写法  
 > https://github.com/hcanyz/ZAdapter
 
+[![](https://jitpack.io/v/hcanyz/ZAdapter.svg)](https://jitpack.io/#hcanyz/ZAdapter)
+
 Support **API v14+**  
 Support **androidx** 
 
