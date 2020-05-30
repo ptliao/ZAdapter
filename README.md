@@ -30,7 +30,7 @@ Support **androidx**
 
 ## 如何使用
 
-添加依赖
+1. 添加依赖
 ```groovy
 //根目录build.gradle
 allprojects {
@@ -44,8 +44,22 @@ dependencies {
     implementation 'com.github.hcanyz.ZAdapter:ZAdapter:1.0.0'
 }
 ```
+2. 创建holder 和 给数据bean添加生成器
+```kotlin
+// 数据对象，IHolderCreatorName
+data class SimpleData(val test: String) : IHolderCreatorName
 
-创建adapter
+// 包含一个textview的简单布局
+class SimpleHolder(parent: ViewGroup) :
+    ZViewHolder<SimpleData>(parent, R.layout.holder_item_fixed) {
+    override fun update(data: SimpleData, payloads: List<Any>) {
+        super.update(data, payloads)
+        findViewById<TextView>(R.id.tv_1).text = data.test
+    }
+}
+```
+
+2. 创建adapter
 ```kotlin
 //init listOf
 val listOf = arrayListOf<SimpleData>()
@@ -59,15 +73,13 @@ val listOf = arrayListOf<SimpleData>()
 zAdapter.mDatas = listOf
 ```
 
-注册Creator,绑定RecyclerView
+3. 注册Creator,绑定RecyclerView
 ```kotlin
 //注册生成器的本质就是 绑定一个 name 和 一个creator方法
 //adapter要找到某个holder时会使用bean提供的holderCreatorName找到对应的creator方法，生成holdre
 //ZAdapter默认约定一个实现了IHolderCreatorName的数据bean，holderCreatorName返回当前类的全类名
 zAdapter.holderCreatorRegistry.registeredCreator(SimpleData::class.java.name) { parent ->
-    val testHolder = SimpleHolder(parent)
-    testHolder.lifecycle.addObserver(LifecycleObserverTest())
-    return@registeredCreator testHolder
+    return@registeredCreator SimpleHolder(parent)
 }
 recylerview.layoutManager = LinearLayoutManager(context)
 recylerview.adapter = zAdapter
@@ -86,7 +98,7 @@ recylerview.adapter = zAdapter
     ViewModelProviders.of(this).get(EventViewModel::class.java).clickEvent.observe(...)
 
     //holder发送事件
-    ViewModelProviders.of(it).get(EventViewModel::class.java).clickEvent.postValue(...)
+    ViewModelProviders.of(context).get(EventViewModel::class.java).clickEvent.postValue(...)
     ```
     容器通过修改holder的数据bean，notifyDataChanged改变holder
 2. 监听holder生命周期
