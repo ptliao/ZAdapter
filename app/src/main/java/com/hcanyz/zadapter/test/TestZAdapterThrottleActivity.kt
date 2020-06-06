@@ -1,5 +1,6 @@
 package com.hcanyz.zadapter.test
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -7,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
+import com.codemonkeylabs.fpslibrary.TinyDancer
 import com.hcanyz.zadapter.ZAdapterThrottle
 import com.hcanyz.zadapter.helper.bindZAdapter
 import com.hcanyz.zadapter.hodler.ViewHolderHelper
@@ -25,6 +27,7 @@ class TestZAdapterThrottleActivity : AppCompatActivity() {
 
     private val compositeDisposable by lazy { CompositeDisposable() }
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_test_zadapter)
@@ -33,11 +36,11 @@ class TestZAdapterThrottleActivity : AppCompatActivity() {
         //simple
         repeat(2) { listOf.add(SimpleData(R.mipmap.ic_launcher, "SimpleData_$it")) }
         //MultiData + R.layout.holder_multi_1
-        repeat(7) { listOf.add(MultiData(R.mipmap.ic_launcher, "multiData_$it", false)) }
+        repeat(27) { listOf.add(MultiData(R.mipmap.ic_launcher, "multiData_$it", false)) }
         //MultiData + R.layout.holder_multi_2
-        repeat(7) { listOf.add(MultiData(R.mipmap.ic_launcher_round, "", true)) }
+        repeat(27) { listOf.add(MultiData(R.mipmap.ic_launcher_round, "", true)) }
         //MultiData2 + R.layout.holder_multi_1
-        repeat(7) { listOf.add(MultiData2(R.mipmap.ic_launcher, "MultiData2_$it")) }
+        repeat(27) { listOf.add(MultiData2(R.mipmap.ic_launcher, "MultiData2_$it")) }
 
         val zAdapter = ZAdapterThrottle<IHolderCreatorName>(mViewHolderHelper = ViewHolderHelper(fragmentActivity = this))
         //registry SimpleData + R.layout.holder_simple > SimpleHolder
@@ -71,7 +74,15 @@ class TestZAdapterThrottleActivity : AppCompatActivity() {
         val subscribe = Observable.interval(10, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    zAdapter.notifyDataChangedWithThrottle()
+                    if (isOpenThrottle) {
+                        zAdapter.notifyDataChangedWithThrottle()
+                    } else {
+                        zAdapter.notifyDataSetChanged()
+                    }
+
+                    requestNotifyCount++
+                    test_info.text = "requestNotifyCount:$requestNotifyCount \n" +
+                            "realNotifyCount:$realNotifyCount \n"
                 }
 
         compositeDisposable.add(subscribe)
@@ -80,9 +91,30 @@ class TestZAdapterThrottleActivity : AppCompatActivity() {
             override fun onChanged() {
                 super.onChanged()
                 Log.e(TAG, "onChanged -> ${System.currentTimeMillis()}")
+
+                realNotifyCount++
+                test_info.text = "requestNotifyCount:$requestNotifyCount \n" +
+                        "realNotifyCount:$realNotifyCount \n"
             }
         })
+
+        test_switch.setOnCheckedChangeListener { _, isChecked ->
+            isOpenThrottle = isChecked
+        }
+
+        //alternatively
+        TinyDancer.create()
+                .redFlagPercentage(.1f) // set red indicator for 10%....different from default
+                .startingXPosition(500)
+                .startingYPosition(500)
+                .show(this)
     }
+
+    //--- test info ---
+    private var isOpenThrottle = true
+    private var requestNotifyCount = 0
+    private var realNotifyCount = 0
+    //--- test info ---
 
     override fun onDestroy() {
         super.onDestroy()

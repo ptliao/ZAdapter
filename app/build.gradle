@@ -8,6 +8,12 @@ apply plugin: 'kotlin-kapt'
 
 android deps.gradleConfig.simpleAndroid(project)
 
+android {
+    defaultConfig {
+        minSdkVersion 16
+    }
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -23,4 +29,6 @@ dependencies {
 
     implementation deps.kotlin.stdLib
     implementation deps.kotlin.reflect
+
+    debugImplementation "com.github.brianPlummer:tinydancer:0.1.2"
 }
