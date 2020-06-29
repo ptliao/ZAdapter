@@ -10,6 +10,8 @@ import androidx.annotation.LayoutRes
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
+import com.hcanyz.zadapter.ZAdapter
+import com.hcanyz.zadapter.registry.IHolderCreatorName
 
 /**
  * @author hcanyz
@@ -20,7 +22,7 @@ import androidx.lifecycle.LifecycleRegistry
  *
  * 需要依赖 kapt deps.android.lifecycleCompiler ，自动生成 xxx_LifecycleObserverTest_LifecycleAdapter
  */
-open class ZViewHolder<DATA> internal constructor(protected val mContext: Context, private val mRootView: View) : LifecycleOwner {
+open class ZViewHolder<DATA : Any> internal constructor(protected val mContext: Context, private val mRootView: View) : LifecycleOwner {
 
     constructor(context: Context, @LayoutRes layoutId: Int) : this(context, View.inflate(context, layoutId, null))
 
@@ -42,10 +44,12 @@ open class ZViewHolder<DATA> internal constructor(protected val mContext: Contex
         }
     }
 
-    var mData: DATA? = null
+    lateinit var mData: DATA
 
     //用于传递事件源和其他消息
     var mViewHolderHelper: ViewHolderHelper? = null
+
+    internal lateinit var zAdapter: ZAdapter<out IHolderCreatorName>
 
     private var mLifecycleRegistry: LifecycleRegistry
 
@@ -120,14 +124,8 @@ open class ZViewHolder<DATA> internal constructor(protected val mContext: Contex
         return this
     }
 
-    fun performUpdate(data: DATA? = null, payloads: List<Any> = arrayListOf()): ZViewHolder<DATA> {
-        data?.let {
-            update(it, payloads)
-        } ?: let {
-            mData?.let {
-                update(it, payloads)
-            }
-        }
+    fun performUpdate(data: DATA, payloads: List<Any> = arrayListOf()): ZViewHolder<DATA> {
+        update(data, payloads)
         return this
     }
 }

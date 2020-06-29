@@ -62,8 +62,8 @@ private fun <DATA : IHolderCreatorName> ViewGroup.onChanged(adapter: ZAdapter<DA
 }
 
 private fun <DATA : IHolderCreatorName> ViewGroup.createHolder7hook(adapter: ZAdapter<DATA>, position: Int, iInjectHook: IInjectHook?) {
-    val findViewType = adapter.holderCreatorRegistry.findViewTypeByCreatorName(adapter.mDatas[position].holderCreatorName())
-    val holder = adapter.holderCreatorRegistry.createHolderByHolderBean<DATA>(findViewType, this, adapter.mViewHolderHelper)
+    val findViewType = adapter.registry.findViewTypeByCreatorName(adapter.mDatas[position].holderCreatorName())
+    val holder = adapter.registry.createHolderByHolderBean<DATA>(findViewType, this, adapter.mViewHolderHelper)
     val view = holder.rootView()
     iInjectHook?.hookViewCreated(holder, view, position)
     addView(view, position)

@@ -16,8 +16,9 @@ import com.hcanyz.zadapter.registry.IHolderCreatorName
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.activity_test_zadapter.*
+import kotlinx.android.synthetic.main.activity_test_zadapter_throttle.*
 import java.util.concurrent.TimeUnit
+import kotlin.random.Random
 
 class TestZAdapterThrottleActivity : AppCompatActivity() {
 
@@ -30,7 +31,7 @@ class TestZAdapterThrottleActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_test_zadapter)
+        setContentView(R.layout.activity_test_zadapter_throttle)
 
         val listOf = arrayListOf<IHolderCreatorName>()
         //simple
@@ -44,16 +45,16 @@ class TestZAdapterThrottleActivity : AppCompatActivity() {
 
         val zAdapter = ZAdapterThrottle<IHolderCreatorName>(mViewHolderHelper = ViewHolderHelper(fragmentActivity = this))
         //registry SimpleData + R.layout.holder_simple > SimpleHolder
-        zAdapter.holderCreatorRegistry.registeredCreator(SimpleData::class.java.name) { parent ->
-            return@registeredCreator SimpleHolder(parent)
+        zAdapter.registry.registered(SimpleData::class.java.name) { parent ->
+            return@registered SimpleHolder(parent)
         }
         //registry MultiData + R.layout.holder_multi_1 > MultiHolder
-        zAdapter.holderCreatorRegistry.registeredCreator(MultiData::class.java.name) { parent ->
-            return@registeredCreator MultiHolder(parent, R.layout.holder_multi_1)
+        zAdapter.registry.registered(MultiData::class.java.name) { parent ->
+            return@registered MultiHolder(parent, R.layout.holder_multi_1)
         }
         //registry MultiData + R.layout.holder_multi_2 > MultiHolder
-        zAdapter.holderCreatorRegistry.registeredCreator("${MultiData::class.java.name}_${R.layout.holder_multi_2}") { parent ->
-            return@registeredCreator MultiHolder(parent, R.layout.holder_multi_2)
+        zAdapter.registry.registered("${MultiData::class.java.name}_${R.layout.holder_multi_2}") { parent ->
+            return@registered MultiHolder(parent, R.layout.holder_multi_2)
         }
         zAdapter.openThrottle(1000)
         zAdapter.mDatas = listOf
@@ -74,6 +75,18 @@ class TestZAdapterThrottleActivity : AppCompatActivity() {
         val subscribe = Observable.interval(10, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
+                    for (mData in zAdapter.mDatas) {
+                        if (mData is SimpleData) {
+                            if (mData.key.isNotEmpty()) {
+                                mData.key = mData.key.replaceRange(mData.key.length - 1, mData.key.length, Random.nextInt(9).toString())
+                            }
+                        } else if (mData is IMulti) {
+                            if (mData.text.isNotEmpty()) {
+                                mData.text = mData.text.replaceRange(mData.text.length - 1, mData.text.length, Random.nextInt(9).toString())
+                            }
+                        }
+                    }
+
                     if (isOpenThrottle) {
                         zAdapter.notifyDataChangedWithThrottle()
                     } else {

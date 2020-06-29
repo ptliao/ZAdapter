@@ -5,8 +5,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.RecyclerView
 import com.hcanyz.zadapter.hodler.ViewHolderHelper
 import com.hcanyz.zadapter.hodler.ZRecyclerViewHolder
-import com.hcanyz.zadapter.registry.IHolderCreatorName
 import com.hcanyz.zadapter.registry.HolderTypeResolverRegistry
+import com.hcanyz.zadapter.registry.IHolderCreatorName
 import java.util.*
 
 
@@ -17,27 +17,28 @@ open class ZAdapter<DATA : IHolderCreatorName>(var mDatas: MutableList<DATA> = a
                                                val mViewHolderHelper: ViewHolderHelper? = null) :
         RecyclerView.Adapter<ZRecyclerViewHolder<DATA>>() {
 
-    val holderCreatorRegistry by lazy { HolderTypeResolverRegistry() }
+    val registry by lazy { HolderTypeResolverRegistry() }
 
-    /**
-     * adapter 标签
-     */
-    val adapterId: String by lazy { UUID.randomUUID().toString() }
+    val adapterUUID: String by lazy { UUID.randomUUID().toString() }
+
+    var showItemCount = -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ZRecyclerViewHolder<DATA> {
-        val holder = holderCreatorRegistry.createHolderByHolderBean<DATA>(viewType, parent, mViewHolderHelper)
-        holder.getLifecycleRegistry().handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-
+        val holder = registry.createHolderByHolderBean<DATA>(viewType, parent, mViewHolderHelper)
         holder.initTask
-
+        holder.zAdapter = this
+        holder.getLifecycleRegistry().handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         return holder.recyclerViewHolder
     }
 
     override fun getItemViewType(position: Int): Int {
-        return holderCreatorRegistry.findViewTypeByCreatorName(mDatas[position].holderCreatorName())
+        return registry.findViewTypeByCreatorName(mDatas[position].holderCreatorName())
     }
 
     override fun getItemCount(): Int {
+        if (showItemCount > -1) {
+            return showItemCount
+        }
         return mDatas.size
     }
 
@@ -51,7 +52,6 @@ open class ZAdapter<DATA : IHolderCreatorName>(var mDatas: MutableList<DATA> = a
 
     private fun onBindViewHolderInner(holder: ZRecyclerViewHolder<DATA>, position: Int, payloads: List<Any> = emptyList()) {
         holder.update(mDatas[position], payloads)
-
         holder.holder.getLifecycleRegistry().handleLifecycleEvent(Lifecycle.Event.ON_START)
     }
 

@@ -34,22 +34,22 @@ class TestZAdapterInOtherLayoutActivity : AppCompatActivity() {
 
         val zAdapter = ZAdapter(listOf, ViewHolderHelper(fragmentActivity = this))
         //registry SimpleData + R.layout.holder_simple > SimpleHolder
-        zAdapter.holderCreatorRegistry.registeredCreator(SimpleData::class.java.name) { parent ->
+        zAdapter.registry.registered(SimpleData::class.java.name) { parent ->
             val testHolder = SimpleHolder(parent)
             testHolder.lifecycle.addObserver(LifecycleObserverTest())
-            return@registeredCreator testHolder
+            return@registered testHolder
         }
         //registry MultiData + R.layout.holder_multi_1 > MultiHolder
-        zAdapter.holderCreatorRegistry.registeredCreator(MultiData::class.java.name) { parent ->
+        zAdapter.registry.registered(MultiData::class.java.name) { parent ->
             val multiHolder = MultiHolder(parent, R.layout.holder_multi_1)
             multiHolder.lifecycle.addObserver(LifecycleObserverTest())
-            return@registeredCreator multiHolder
+            return@registered multiHolder
         }
         //registry MultiData + R.layout.holder_multi_2 > MultiHolder
-        zAdapter.holderCreatorRegistry.registeredCreator("${MultiData::class.java.name}_${R.layout.holder_multi_2}") { parent ->
+        zAdapter.registry.registered("${MultiData::class.java.name}_${R.layout.holder_multi_2}") { parent ->
             val multiHolder = MultiHolder(parent, R.layout.holder_multi_2)
             multiHolder.lifecycle.addObserver(LifecycleObserverTest())
-            return@registeredCreator multiHolder
+            return@registered multiHolder
         }
         ll_test.injectViewWithAdapter(zAdapter)
 
@@ -70,7 +70,7 @@ class TestZAdapterInOtherLayoutActivity : AppCompatActivity() {
 
         @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
         fun holderCreated(owner: LifecycleOwner) {
-            Log.e(TAG, "HolderCreated -> ${(owner as ZViewHolder<*>).mData}")
+            Log.e(TAG, "HolderCreated -> can't use data")
         }
 
         @OnLifecycleEvent(Lifecycle.Event.ON_START)

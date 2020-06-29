@@ -78,8 +78,8 @@ zAdapter.mDatas = listOf
 //注册生成器的本质就是 绑定一个 name 和 一个creator方法
 //adapter要找到某个holder时会使用bean提供的holderCreatorName找到对应的creator方法，生成holdre
 //ZAdapter默认约定一个实现了IHolderCreatorName的数据bean，holderCreatorName返回当前类的全类名
-zAdapter.holderCreatorRegistry.registeredCreator(SimpleData::class.java.name) { parent ->
-    return@registeredCreator SimpleHolder(parent)
+zAdapter.registry.registered(SimpleData::class.java.name) { parent ->
+    return@registered SimpleHolder(parent)
 }
 recylerview.layoutManager = LinearLayoutManager(context)
 recylerview.adapter = zAdapter
@@ -109,7 +109,7 @@ recylerview.adapter = zAdapter
     class LifecycleObserverTest : LifecycleObserver {
         @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
         fun holderCreated(owner: LifecycleOwner) {
-            Log.e(TAG, "HolderCreated -> ${(owner as ZViewHolder<*>).mData}")
+            Log.e(TAG, "HolderCreated -> can't use data")
         }
     }
     //其他参考Lifecycle.Event.*

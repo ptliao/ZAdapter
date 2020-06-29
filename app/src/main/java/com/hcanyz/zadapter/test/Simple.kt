@@ -8,7 +8,7 @@ import android.widget.Toast
 import com.hcanyz.zadapter.hodler.ZViewHolder
 import com.hcanyz.zadapter.registry.IHolderCreatorName
 
-data class SimpleData(val iconId: Int, val key: String) : IHolderCreatorName
+data class SimpleData(val iconId: Int, var key: String) : IHolderCreatorName
 
 class SimpleHolder(parent: ViewGroup, layoutId: Int = R.layout.holder_simple) : ZViewHolder<SimpleData>(parent, layoutId) {
 
@@ -22,23 +22,23 @@ class SimpleHolder(parent: ViewGroup, layoutId: Int = R.layout.holder_simple) : 
     override fun initListener(rootView: View) {
         super.initListener(rootView)
         iv_test.setOnClickListener {
-            Toast.makeText(mContext, "click", Toast.LENGTH_SHORT).show()
+            Toast.makeText(mContext, "click ${recyclerViewHolder.adapterPosition}", Toast.LENGTH_SHORT).show()
         }
     }
 
     override fun onViewAttachedToWindow() {
         super.onViewAttachedToWindow()
-        Log.e(TestZAdapterActivity.TAG, "onViewAttachedToWindow ${mData?.key}")
+        Log.e(TestZAdapterActivity.TAG, "onViewAttachedToWindow ${mData.key}")
     }
 
     override fun onViewDetachedFromWindow() {
         super.onViewDetachedFromWindow()
-        Log.e(TestZAdapterActivity.TAG, "onViewDetachedFromWindow ${mData?.key}")
+        Log.e(TestZAdapterActivity.TAG, "onViewDetachedFromWindow ${mData.key}")
     }
 
     override fun onViewRecycled() {
         super.onViewRecycled()
-        Log.e(TestZAdapterActivity.TAG, "onViewRecycled ${mData?.key}")
+        Log.e(TestZAdapterActivity.TAG, "onViewRecycled ${mData.key}")
     }
 
     override fun update(data: SimpleData, payloads: List<Any>) {

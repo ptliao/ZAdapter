@@ -16,7 +16,7 @@ class HolderTypeResolverRegistry {
 
     private val counter: AtomicInteger by lazy { AtomicInteger(1) }
 
-    fun registeredCreator(creatorName: String, creator: (parent: ViewGroup) -> ZViewHolder<*>) {
+    fun registered(creatorName: String, creator: (parent: ViewGroup) -> ZViewHolder<*>) {
         val mutableMap = maps
         mutableMap[creatorName]?.let {
             throw IllegalStateException("Duplicate registration type：$creatorName $creator")

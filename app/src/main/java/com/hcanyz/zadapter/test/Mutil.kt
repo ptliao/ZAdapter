@@ -10,10 +10,10 @@ import com.hcanyz.zadapter.registry.IHolderCreatorName
 
 interface IMulti : IHolderCreatorName {
     val iconId: Int
-    val text: String
+    var text: String
 }
 
-data class MultiData(override val iconId: Int, override val text: String, val isLayout2: Boolean) : IMulti {
+data class MultiData(override val iconId: Int, override var text: String, val isLayout2: Boolean) : IMulti {
     override fun holderCreatorName(): String {
         if (isLayout2) {
             return "${MultiData::class.java.name}_${R.layout.holder_multi_2}"
@@ -26,7 +26,7 @@ data class MultiData2(val data2IconId: Int, val data2Text: String) : IMulti {
 
     override val iconId: Int = data2IconId
 
-    override val text: String = data2Text
+    override var text: String = data2Text
 
     override fun holderCreatorName(): String {
         return MultiData::class.java.name
