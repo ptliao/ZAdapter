@@ -41,9 +41,10 @@ allprojects {
 }
 //要使用的模块添加:
 dependencies {
-    implementation 'com.github.hcanyz.ZAdapter:ZAdapter:1.0.0'
+    implementation 'com.github.hcanyz.ZAdapter:ZAdapter:1.0.1'
 }
 ```
+
 2. 创建holder 和 给数据bean添加生成器
 ```kotlin
 // 数据对象，IHolderCreatorName
@@ -59,7 +60,7 @@ class SimpleHolder(parent: ViewGroup) :
 }
 ```
 
-2. 创建adapter
+3. 创建adapter
 ```kotlin
 //init listOf
 val listOf = arrayListOf<SimpleData>()
@@ -73,7 +74,7 @@ val listOf = arrayListOf<SimpleData>()
 zAdapter.mDatas = listOf
 ```
 
-3. 注册Creator,绑定RecyclerView
+4. 注册Creator,绑定RecyclerView
 ```kotlin
 //注册生成器的本质就是 绑定一个 name 和 一个creator方法
 //adapter要找到某个holder时会使用bean提供的holderCreatorName找到对应的creator方法，生成holdre
