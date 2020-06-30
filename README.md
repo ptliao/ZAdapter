@@ -9,7 +9,7 @@ ZAdapter
 Support **API v14+**  
 Support **androidx** 
 
-## ZAdapter初衷
+## 初衷
 
 ### recylcerview + adapter有什么问题
 
@@ -22,7 +22,7 @@ Support **androidx**
 - holder没有统一的范式方法，例如holder生命周期
 - holder不能很好的被除recylcerview之外的容器使用
 
-### ZAdapter思路
+### 思路
 
 - 通过```HolderTypeResolverRegistry关联``` bean与creator
 - 通过```ViewHolderHelper```传递容器，在使用ViewModel传递事件
@@ -94,14 +94,15 @@ recylerview.adapter = zAdapter
     ```kotlin
     //adapter创建时添加入参 ViewHolderHelper(fragmentActivity = this)
     //可以是 fragment or fragmentActivity
-
+    
     //容器监听事件
     ViewModelProviders.of(this).get(EventViewModel::class.java).clickEvent.observe(...)
-
+    
     //holder发送事件
     ViewModelProviders.of(context).get(EventViewModel::class.java).clickEvent.postValue(...)
     ```
     容器通过修改holder的数据bean，notifyDataChanged改变holder
+
 2. 监听holder生命周期
     ```kotlin
     //build.gradle需要添加 kapt androidx.lifecycle:lifecycle-compiler:2.1.0
@@ -115,12 +116,14 @@ recylerview.adapter = zAdapter
     }
     //其他参考Lifecycle.Event.*
     ```
+
 3. 在其他ViewGroup中使用ZAdapter，例如LinearLayout
     ```kotlin
     ...
     //绑定时使用如下方法
     linearlayout.injectViewWithAdapter(zAdapter)
     ```
+
 4. Throttle notifyDataChanged
     ```kotlin
     //某些场景下会多次刷新界面(例如im接收消息)，需要限制频率
