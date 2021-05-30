@@ -5,10 +5,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
+import com.hcanyz.zadapter.hodler.ViewHolderHelper
 import com.hcanyz.zadapter.hodler.ZViewHolder
-import com.hcanyz.zadapter.registry.IHolderCreatorName
+import com.hcanyz.zadapter.registry.IHolderCreater
 
-data class SimpleData(val iconId: Int, var key: String) : IHolderCreatorName
+data class SimpleData(val iconId: Int, var key: String) : IHolderCreater {
+    override fun holderItemType(): Int {
+        return HolderType.TYPE_SIMPLE
+    }
+
+    override fun createHoldView(parent: ViewGroup, holderItemType: Int): ZViewHolder<out IHolderCreater> {
+        return SimpleHolder(parent)
+    }
+}
 
 class SimpleHolder(parent: ViewGroup, layoutId: Int = R.layout.holder_simple) : ZViewHolder<SimpleData>(parent, layoutId) {
 
@@ -22,7 +31,8 @@ class SimpleHolder(parent: ViewGroup, layoutId: Int = R.layout.holder_simple) : 
     override fun initListener(rootView: View) {
         super.initListener(rootView)
         iv_test.setOnClickListener {
-            Toast.makeText(mContext, "click ${recyclerViewHolder.adapterPosition}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(mContext, "click ${adapterPosition}", Toast.LENGTH_SHORT).show()
+            mViewHolderHelper?.getViewModel(EventViewModel::class.java)?.clickEvent?.postValue(mData)
         }
     }
 

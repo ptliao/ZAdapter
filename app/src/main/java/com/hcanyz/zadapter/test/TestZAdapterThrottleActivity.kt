@@ -12,7 +12,7 @@ import com.codemonkeylabs.fpslibrary.TinyDancer
 import com.hcanyz.zadapter.ZAdapterThrottle
 import com.hcanyz.zadapter.helper.bindZAdapter
 import com.hcanyz.zadapter.hodler.ViewHolderHelper
-import com.hcanyz.zadapter.registry.IHolderCreatorName
+import com.hcanyz.zadapter.registry.IHolderCreater
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -33,7 +33,7 @@ class TestZAdapterThrottleActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_test_zadapter_throttle)
 
-        val listOf = arrayListOf<IHolderCreatorName>()
+        val listOf = arrayListOf<IHolderCreater>()
         //simple
         repeat(2) { listOf.add(SimpleData(R.mipmap.ic_launcher, "SimpleData_$it")) }
         //MultiData + R.layout.holder_multi_1
@@ -43,19 +43,19 @@ class TestZAdapterThrottleActivity : AppCompatActivity() {
         //MultiData2 + R.layout.holder_multi_1
         repeat(27) { listOf.add(MultiData2(R.mipmap.ic_launcher, "MultiData2_$it")) }
 
-        val zAdapter = ZAdapterThrottle<IHolderCreatorName>(mViewHolderHelper = ViewHolderHelper(fragmentActivity = this))
-        //registry SimpleData + R.layout.holder_simple > SimpleHolder
-        zAdapter.registry.registered(SimpleData::class.java.name) { parent ->
-            return@registered SimpleHolder(parent)
-        }
-        //registry MultiData + R.layout.holder_multi_1 > MultiHolder
-        zAdapter.registry.registered(MultiData::class.java.name) { parent ->
-            return@registered MultiHolder(parent, R.layout.holder_multi_1)
-        }
-        //registry MultiData + R.layout.holder_multi_2 > MultiHolder
-        zAdapter.registry.registered("${MultiData::class.java.name}_${R.layout.holder_multi_2}") { parent ->
-            return@registered MultiHolder(parent, R.layout.holder_multi_2)
-        }
+        val zAdapter = ZAdapterThrottle<IHolderCreater>(mViewHolderHelper = ViewHolderHelper(fragmentActivity = this))
+//        //registry SimpleData + R.layout.holder_simple > SimpleHolder
+//        zAdapter.registry.registered(SimpleData::class.java.name) { parent ->
+//            return@registered SimpleHolder(parent)
+//        }
+//        //registry MultiData + R.layout.holder_multi_1 > MultiHolder
+//        zAdapter.registry.registered(MultiData::class.java.name) { parent ->
+//            return@registered MultiHolder(parent, R.layout.holder_multi_1)
+//        }
+//        //registry MultiData + R.layout.holder_multi_2 > MultiHolder
+//        zAdapter.registry.registered("${MultiData::class.java.name}_${R.layout.holder_multi_2}") { parent ->
+//            return@registered MultiHolder(parent, R.layout.holder_multi_2)
+//        }
         zAdapter.openThrottle(1000)
         zAdapter.mDatas = listOf
         recylerview.bindZAdapter(zAdapter)

@@ -5,20 +5,33 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProviders
+import com.hcanyz.zadapter.hodler.ViewHolderHelper
 import com.hcanyz.zadapter.hodler.ZViewHolder
-import com.hcanyz.zadapter.registry.IHolderCreatorName
+import com.hcanyz.zadapter.registry.IHolderCreater
 
-interface IMulti : IHolderCreatorName {
+interface IMulti : IHolderCreater {
     val iconId: Int
     var text: String
 }
 
 data class MultiData(override val iconId: Int, override var text: String, val isLayout2: Boolean) : IMulti {
-    override fun holderCreatorName(): String {
+
+    override fun holderItemType(): Int {
         if (isLayout2) {
-            return "${MultiData::class.java.name}_${R.layout.holder_multi_2}"
+            return HolderType.TYPE_MUTIL_2
         }
-        return MultiData::class.java.name
+        return HolderType.TYPE_MUTIL
+    }
+
+    override fun createHoldView(parent: ViewGroup, holderItemType: Int): ZViewHolder<IMulti> {
+        return when (holderItemType) {
+            HolderType.TYPE_MUTIL_2 -> {
+                MultiHolder(parent, R.layout.holder_multi_2)
+            }
+            else -> {
+                MultiHolder(parent)
+            }
+        }
     }
 }
 
@@ -28,8 +41,12 @@ data class MultiData2(val data2IconId: Int, val data2Text: String) : IMulti {
 
     override var text: String = data2Text
 
-    override fun holderCreatorName(): String {
-        return MultiData::class.java.name
+    override fun holderItemType(): Int {
+        return HolderType.TYPE_MUTIL_2
+    }
+
+    override fun createHoldView(parent: ViewGroup, holderItemType: Int): ZViewHolder<IMulti> {
+        return MultiHolder(parent, R.layout.holder_multi_2)
     }
 }
 
@@ -47,9 +64,7 @@ class MultiHolder(parent: ViewGroup, layoutId: Int = R.layout.holder_multi_1) : 
     override fun initListener(rootView: View) {
         super.initListener(rootView)
         iv_test.setOnClickListener {
-            mViewHolderHelper?.requireFragmentActivity()?.let {
-                ViewModelProviders.of(it).get(EventViewModel::class.java).clickEvent.postValue(mData)
-            }
+            mViewHolderHelper?.getViewModel(EventViewModel::class.java)?.clickEvent?.postValue(mData)
         }
     }
 

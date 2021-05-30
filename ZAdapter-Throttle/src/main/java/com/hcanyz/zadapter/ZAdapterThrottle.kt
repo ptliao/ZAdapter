@@ -1,7 +1,7 @@
 package com.hcanyz.zadapter
 
 import com.hcanyz.zadapter.hodler.ViewHolderHelper
-import com.hcanyz.zadapter.registry.IHolderCreatorName
+import com.hcanyz.zadapter.registry.IHolderCreater
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
 import io.reactivex.ObservableOnSubscribe
@@ -13,9 +13,11 @@ import java.util.concurrent.TimeUnit
 /**
  * @author hcanyz
  */
-class ZAdapterThrottle<DATA : IHolderCreatorName>(mDatas: MutableList<DATA> = arrayListOf(),
-                                                  mViewHolderHelper: ViewHolderHelper? = null) :
-        ZAdapter<DATA>(mDatas, mViewHolderHelper) {
+class ZAdapterThrottle<DATA:IHolderCreater>(
+    mDatas: MutableList<DATA> = arrayListOf(),
+    mViewHolderHelper: ViewHolderHelper? = null
+) :
+    ZAdapter<DATA>(mDatas, mViewHolderHelper) {
 
     private var intervalDuration = 0L
     private var isOpenThrottle = false

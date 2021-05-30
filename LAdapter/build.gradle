@@ -15,11 +15,8 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-
-    implementation project(':LAdapter')
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 
     compileOnly deps.android.recyclerview
-
-    api deps.third.rxjava2
-    api deps.third.rxandroid
+    compileOnly deps.android.appcompat
 }

@@ -9,7 +9,7 @@ import com.hcanyz.zadapter.ZAdapter
 import com.hcanyz.zadapter.helper.injectViewWithAdapter
 import com.hcanyz.zadapter.hodler.ViewHolderHelper
 import com.hcanyz.zadapter.hodler.ZViewHolder
-import com.hcanyz.zadapter.registry.IHolderCreatorName
+import com.hcanyz.zadapter.registry.IHolderCreater
 import kotlinx.android.synthetic.main.activity_test_zadapter_other_layout.*
 
 class TestZAdapterInOtherLayoutActivity : AppCompatActivity() {
@@ -22,7 +22,7 @@ class TestZAdapterInOtherLayoutActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_test_zadapter_other_layout)
 
-        val listOf = arrayListOf<IHolderCreatorName>()
+        val listOf = arrayListOf<IHolderCreater>()
         //simple
         repeat(2) { listOf.add(SimpleData(R.mipmap.ic_launcher, "SimpleData_$it")) }
         //MultiData + R.layout.holder_multi_1
@@ -33,24 +33,24 @@ class TestZAdapterInOtherLayoutActivity : AppCompatActivity() {
         repeat(7) { listOf.add(MultiData2(R.mipmap.ic_launcher, "MultiData2_$it")) }
 
         val zAdapter = ZAdapter(listOf, ViewHolderHelper(fragmentActivity = this))
-        //registry SimpleData + R.layout.holder_simple > SimpleHolder
-        zAdapter.registry.registered(SimpleData::class.java.name) { parent ->
-            val testHolder = SimpleHolder(parent)
-            testHolder.lifecycle.addObserver(LifecycleObserverTest())
-            return@registered testHolder
-        }
-        //registry MultiData + R.layout.holder_multi_1 > MultiHolder
-        zAdapter.registry.registered(MultiData::class.java.name) { parent ->
-            val multiHolder = MultiHolder(parent, R.layout.holder_multi_1)
-            multiHolder.lifecycle.addObserver(LifecycleObserverTest())
-            return@registered multiHolder
-        }
-        //registry MultiData + R.layout.holder_multi_2 > MultiHolder
-        zAdapter.registry.registered("${MultiData::class.java.name}_${R.layout.holder_multi_2}") { parent ->
-            val multiHolder = MultiHolder(parent, R.layout.holder_multi_2)
-            multiHolder.lifecycle.addObserver(LifecycleObserverTest())
-            return@registered multiHolder
-        }
+//        //registry SimpleData + R.layout.holder_simple > SimpleHolder
+//        zAdapter.registry.registered(SimpleData::class.java.name) { parent ->
+//            val testHolder = SimpleHolder(parent)
+//            testHolder.lifecycle.addObserver(LifecycleObserverTest())
+//            return@registered testHolder
+//        }
+//        //registry MultiData + R.layout.holder_multi_1 > MultiHolder
+//        zAdapter.registry.registered(MultiData::class.java.name) { parent ->
+//            val multiHolder = MultiHolder(parent, R.layout.holder_multi_1)
+//            multiHolder.lifecycle.addObserver(LifecycleObserverTest())
+//            return@registered multiHolder
+//        }
+//        //registry MultiData + R.layout.holder_multi_2 > MultiHolder
+//        zAdapter.registry.registered("${MultiData::class.java.name}_${R.layout.holder_multi_2}") { parent ->
+//            val multiHolder = MultiHolder(parent, R.layout.holder_multi_2)
+//            multiHolder.lifecycle.addObserver(LifecycleObserverTest())
+//            return@registered multiHolder
+//        }
         ll_test.injectViewWithAdapter(zAdapter)
 
         //listen clickEvent
